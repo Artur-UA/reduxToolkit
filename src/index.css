@@ -11,3 +11,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+li {
+  list-style-type: none;
+}
+
+ul {
+  margin-left: 0;
+  padding-left: 0;
+}
+.checkbox{
+  margin-right: 10px;
+}
+.delete{
+  margin-left: 10px;
+  color: red;
+  cursor: pointer;
+}
+input:checked + label{
+  text-decoration: line-through;
+}
