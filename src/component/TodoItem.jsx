@@ -1,10 +1,22 @@
-const TodoItem = ({id, text, success, deleteTodo, changeSuccess}) => {
+import { useDispatch } from 'react-redux'
+import {deleteTodo, changeSuccess} from '../store/todoSlice'
+
+const TodoItem = ({id, text, success}) => {
+
+  const dispatch = useDispatch();
+  const deleteItem = () => {
+    dispatch(deleteTodo({id}));
+  }
+  const changeItem = () => {
+    dispatch(changeSuccess({id}));
+  }
+
   return (
     <li>
-              <input className='checkbox' type="checkbox" checked={success} onChange={ () => changeSuccess(id)} />
-              <label>{text}</label>
-              <label className='delete' onClick={ () => deleteTodo(id) }>&times;</label>
-            </li>
+      <input className='checkbox' type="checkbox" checked={success} onChange={ () => changeItem(id)} />
+      <label>{text}</label>
+      <label className='delete' onClick={ () => deleteItem(id) }>&times;</label>
+    </li>
   )
 }
 
