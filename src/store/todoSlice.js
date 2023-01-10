@@ -1,9 +1,29 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+export const loadTodoList = createAsyncThunk(
+    'todos/loadTodoList', // имя санки/редюсера
+    async function (_, {rejectWithValue}) { // первий параметр это параметры из dispatch(но я ничего не передавал). второй есть выбор достыпных методов. rejectWithValue - для обрботки ошибки 
+
+        try {
+            const resp = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=7',)
+
+            if (!resp.ok){
+                throw new Error('Error in Server')
+            }
+            const data = await resp.json();
+            return data;
+        } catch (error) {
+            return rejectWithValue(error)
+        }
+        
+    }
+)
 const todoSLice = createSlice({
     name: 'todos', 
     initialState: { 
-        todos: []
+        todos: [],
+        status: null,
+        error: null
     },
     reducers: {
         addNewTodo(state,action) {
@@ -20,6 +40,20 @@ const todoSLice = createSlice({
             const idTodo = state.todos.find( todo => todo.id === action.payload.id);
             idTodo.success = !idTodo.success
         }
+    },
+    extraReducers:{
+        [loadTodoList.pending]: (state) => { // 3 состояния (pending, fulfilled, rejected)
+            state.status = 'loading';
+            state.error = null;
+        },
+        [loadTodoList.fulfilled]: (state, action) => {
+            state.status = 'resolved';
+            state.todos = action.payload;
+        },
+        [loadTodoList.rejected]: (state, action) => {
+            state.status = 'reject';
+            state.error = action.payload; 
+        },
     }
 })
 
